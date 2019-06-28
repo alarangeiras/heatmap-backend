@@ -1,6 +1,6 @@
 const express = require('express');
 
-const locations = [];
+let locations = [];
 
 let app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,11 +8,22 @@ const PORT = process.env.PORT || 3000;
 app.get('/updateMap/:location/:qtd', (req, res) => {
 	var location = req.params.location;
 	var qtd = req.params.qtd;
+	found = false;
+	locations = locations.map(content => {
+		if (content && content.location == location) {
+			content.qtd = qtd;
+			found = true;	
+		}
 
-	locations.push({
-		location: location,
-		qtd: qtd
+		return content;
 	});
+	if (!found) {
+		locations.push({
+			location: location,
+			qtd: qtd
+		});
+	}
+
 
 	res.status(200);
 	res.json({
